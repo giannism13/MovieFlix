@@ -12,6 +12,7 @@ import io.ktor.client.request.headers
 import io.ktor.http.URLProtocol
 import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 object KtorClient {
 	private const val ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODI5MTJlNWMyN2IxODRlOTAz" +
@@ -39,7 +40,9 @@ object KtorClient {
 			level = LogLevel.ALL
 		}
 		install(ContentNegotiation) {
-			json()
+			json(Json{
+				this.ignoreUnknownKeys = true
+			})
 		}
 		install(DefaultRequest) {
 			url {
