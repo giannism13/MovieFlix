@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = viewModel(), onMovieClick:(Int) -> Unit) {
 	val listState = rememberLazyListState()
 	val coroutineScope = rememberCoroutineScope()
 	Scaffold(
@@ -79,12 +79,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
 				contentPadding = PaddingValues(10.dp)
 			) {
 				items(viewModel.movieList) {
-					MovieListItem(
-						title = it.title,
-						backDropPath = it.backdropPath,
-						voteAverage = it.voteAverage,
-						releaseDate = it.releaseDate
-					)
+					MovieListItem(it, onMovieClick)
 				}
 			}
 			PullToRefreshContainer(state = pullRefreshState)

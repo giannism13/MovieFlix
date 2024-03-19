@@ -1,5 +1,6 @@
 package com.giannism13.movieflix.homeScreen.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -23,25 +24,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.giannism13.movieflix.ktorClient.responses.Movie
 
 const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w780"
 
 @Composable
-fun MovieListItem(title: String, backDropPath: String?, voteAverage: Double, releaseDate: String) {
-	var isFavorite by remember { mutableStateOf(false) }
-	Card {
+fun MovieListItem(movie: Movie, onClick: (Int) -> Unit) {
+	var isFavorite by remember { mutableStateOf(false) } //TODO: Implement favorite movies
+	Card(modifier = Modifier.clickable{ onClick(movie.id) }) {
 		AsyncImage(
-			IMAGE_BASE_URL + backDropPath,
-			title,
+			IMAGE_BASE_URL + movie.backdropPath,
+			movie.title,
 			contentScale = ContentScale.FillWidth,
 			modifier = Modifier.fillMaxWidth().fillMaxHeight(2 / 3f)
 		)
 		Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-			Text(title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+			Text(movie.title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
 			Spacer(modifier = Modifier.weight(1f))
 			IconToggleButton(checked = isFavorite, onCheckedChange = {isFavorite = it}) {
 				if(isFavorite)
@@ -52,15 +53,9 @@ fun MovieListItem(title: String, backDropPath: String?, voteAverage: Double, rel
 		}
 		Row(modifier = Modifier.padding(start = 10.dp, bottom = 10.dp), verticalAlignment = Alignment.CenterVertically) {
 			Icon(imageVector = Icons.Filled.Star, contentDescription = "Vote Average", tint = Color.Yellow)
-			Text(voteAverage.toString(), fontSize = 14.sp)
+			Text(movie.voteAverage.toString(), fontSize = 14.sp)
 			Spacer(modifier = Modifier.weight(0.1f))
-			Text(releaseDate, modifier = Modifier.weight(1f))
+			Text(movie.releaseDate, modifier = Modifier.weight(1f))
 		}
 	}
-}
-
-@Composable
-@Preview
-private fun MovieListItemPreview() {
-	MovieListItem("Movie Title", "/backdrop.jpg", 7.5, "2021-10-10")
 }
