@@ -1,10 +1,10 @@
-package com.giannism13.movieflix.ktorClient.responses
+package com.giannism13.movieflix.homeScreen.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Movie(
+data class MovieListing(
 	val id: Int,
 	val title: String,
 	@SerialName("backdrop_path") val backdropPath: String?,

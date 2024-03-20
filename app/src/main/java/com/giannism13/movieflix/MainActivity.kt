@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.giannism13.movieflix.detailsScreen.MovieDetailsScreen
 import com.giannism13.movieflix.homeScreen.HomeScreen
 import com.giannism13.movieflix.ui.theme.MovieFlixTheme
 
@@ -30,8 +33,10 @@ class MainActivity : ComponentActivity() {
 								navController.navigate("details/$it")
 							}
 						}
-						composable("details/{movieId}") {
-							// DetailsScreen(it.arguments!!.getInt("movieId"))
+						composable("details/{movieId}", arguments = listOf(navArgument("movieId") { type = NavType.IntType })) {
+							 MovieDetailsScreen(it.arguments!!.getInt("movieId")) {
+								navController.popBackStack()
+							 }
 						}
 					}
 				}

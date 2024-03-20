@@ -27,12 +27,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.giannism13.movieflix.ktorClient.responses.Movie
+import com.giannism13.movieflix.homeScreen.models.MovieListing
 
 const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w780"
 
 @Composable
-fun MovieListItem(movie: Movie, onClick: (Int) -> Unit) {
+fun MovieListItem(movie: MovieListing, onClick: (Int) -> Unit) {
 	var isFavorite by remember { mutableStateOf(false) } //TODO: Implement favorite movies
 	Card(modifier = Modifier.clickable{ onClick(movie.id) }) {
 		AsyncImage(

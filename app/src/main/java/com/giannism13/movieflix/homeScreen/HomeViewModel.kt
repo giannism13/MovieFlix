@@ -4,18 +4,18 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.giannism13.movieflix.homeScreen.models.MovieListing
 import com.giannism13.movieflix.ktorClient.KtorClient
-import com.giannism13.movieflix.ktorClient.responses.Movie
 import com.giannism13.movieflix.ktorClient.responses.PopularMoviesResponse
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import io.ktor.http.appendEncodedPathSegments
+import io.ktor.http.appendPathSegments
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel: ViewModel() {
-	private val _movieStateList = mutableStateListOf<Movie>()
+	private val _movieStateList = mutableStateListOf<MovieListing>()
 	val movieList = _movieStateList
 
 	init {
@@ -28,7 +28,7 @@ class HomeViewModel: ViewModel() {
 				val response:PopularMoviesResponse = KtorClient.client.get{
 					this.parameter("page", page)
 					url{
-						it.appendEncodedPathSegments("popular")
+						it.appendPathSegments("popular")
 					}
 				}.body()
 				Log.v("HomeViewModel", "movies in page $page: ${response.results.size}")
