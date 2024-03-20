@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
@@ -62,7 +64,9 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 	) { paddingValues ->
 		Column(modifier = Modifier
 			.padding(paddingValues)
-			.fillMaxSize()) {
+			.fillMaxSize()
+			.verticalScroll(rememberScrollState())
+		) {
 			Box {
 				AsyncImage(
 					model = IMAGE_BASE_URL + viewModel.movieDetails.image,
@@ -70,7 +74,9 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 				)
 
 				if (viewModel.movieDetails.homepage.isNotEmpty())
-					FloatingActionButton(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp)) {
+					FloatingActionButton(onClick = { /*TODO*/ }, modifier = Modifier
+						.align(Alignment.BottomEnd)
+						.padding(10.dp)) {
 						Icon(imageVector = Icons.Default.Share, contentDescription = "Share")
 					}
 			}
@@ -85,6 +91,9 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 				}
 			}
 
+			Text(viewModel.movieDetails.genres.joinToString { it.name }, modifier = Modifier.padding(5.dp), fontWeight = FontWeight.Light)
+
+			Spacer(modifier = Modifier.padding(10.dp))
 			Text(text = "Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
 			Text(text = viewModel.movieDetails.overview, overflow = TextOverflow.Visible, textAlign = TextAlign.Start, modifier = Modifier.padding(horizontal = 5.dp))
 
