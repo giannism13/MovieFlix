@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -74,12 +75,22 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 				)
 
 				if (viewModel.movieDetails.homepage.isNotEmpty())
-					FloatingActionButton(onClick = { /*TODO*/ }, modifier = Modifier
+					FloatingActionButton(onClick = { /*TODO: share movie's homepage*/ }, modifier = Modifier
 						.align(Alignment.BottomEnd)
 						.padding(10.dp)) {
 						Icon(imageVector = Icons.Default.Share, contentDescription = "Share")
 					}
 			}
+
+			Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+				Icon(
+					imageVector = Icons.Filled.Star,
+					contentDescription = "Vote Average",
+					tint = Color.Yellow
+				)
+				Text(viewModel.movieDetails.voteAverage.toString())
+			}
+
 			Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
 				Text(text = viewModel.movieDetails.releaseDate)
 				Spacer(modifier = Modifier.weight(1f))
@@ -91,7 +102,11 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 				}
 			}
 
-			Text(viewModel.movieDetails.genres.joinToString { it.name }, modifier = Modifier.padding(5.dp), fontWeight = FontWeight.Light)
+			Text(
+				viewModel.movieDetails.genres.joinToString { it.name },
+				modifier = Modifier.padding(5.dp),
+				fontWeight = FontWeight.Light
+			)
 
 			Spacer(modifier = Modifier.padding(10.dp))
 			Text(text = "Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
@@ -100,6 +115,8 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 			Spacer(modifier = Modifier.padding(10.dp))
 			Text("Cast", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
 			Text(text = viewModel.castList.joinToString { it.name }, overflow = TextOverflow.Visible, textAlign = TextAlign.Start, modifier = Modifier.padding(horizontal = 5.dp))
+
+			//Todo: Reviews
 		}
 	}
 }
