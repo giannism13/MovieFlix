@@ -1,5 +1,6 @@
 package com.giannism13.movieflix.detailsScreen
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,6 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
@@ -35,18 +35,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.giannism13.movieflix.detailsScreen.composables.ReviewItem
-import com.giannism13.movieflix.ui.theme.MovieFlixTheme
+import com.giannism13.movieflix.detailsScreen.composables.SimilarMovieListing
 
 const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w1280"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewModel(), onBackPressed:() -> Unit) {
+fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewModel(), onSimilarMovieClick:(Int) -> Unit, onBackPressed:() -> Unit) {
 	LaunchedEffect(Unit) {
 		viewModel.getCompleteMovieDetails(movieId)
 	}
@@ -123,16 +122,17 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 
 			viewModel.reviewsList.forEach {
 				ReviewItem(it)
-				HorizontalDivider(modifier = Modifier.padding(vertical = 5.dp))
+			}
+
+			Spacer(modifier = Modifier.padding(10.dp))
+			Text("Similar Movies", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
+			Row(modifier = Modifier.padding(5.dp).horizontalScroll(rememberScrollState())) {
+				viewModel.similarMoviesList.forEach {
+					SimilarMovieListing(movie = it) {movieId ->
+						onSimilarMovieClick(movieId)
+					}
+				}
 			}
 		}
-	}
-}
-
-@Composable
-@Preview
-private fun MovieDetailsScreenPreview() {
-	MovieFlixTheme {
-		MovieDetailsScreen(0){}
 	}
 }

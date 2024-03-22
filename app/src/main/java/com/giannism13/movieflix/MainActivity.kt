@@ -34,7 +34,11 @@ class MainActivity : ComponentActivity() {
 							}
 						}
 						composable("details/{movieId}", arguments = listOf(navArgument("movieId") { type = NavType.IntType })) {
-							 MovieDetailsScreen(it.arguments!!.getInt("movieId")) {
+							 MovieDetailsScreen(it.arguments!!.getInt("movieId"),
+								 onSimilarMovieClick = {movieId ->
+								    navController.navigate("details/$movieId")
+								 }
+							 ) {
 								navController.popBackStack()
 							 }
 						}
