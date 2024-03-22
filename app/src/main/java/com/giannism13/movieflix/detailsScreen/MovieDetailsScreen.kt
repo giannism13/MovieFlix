@@ -1,5 +1,6 @@
 package com.giannism13.movieflix.detailsScreen
 
+import android.content.Intent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -49,7 +51,7 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 	LaunchedEffect(Unit) {
 		viewModel.getCompleteMovieDetails(movieId)
 	}
-
+	val context = LocalContext.current
 	var isFavorite by remember { mutableStateOf(false) } //TODO: Implement favorite movies
 
 	Scaffold(
@@ -76,9 +78,20 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 				)
 
 				if (viewModel.movieDetails.homepage.isNotEmpty())
-					FloatingActionButton(onClick = { /*TODO: share movie's homepage*/ }, modifier = Modifier
-						.align(Alignment.BottomEnd)
-						.padding(10.dp)) {
+					FloatingActionButton(
+						onClick = {
+							val sendIntent = Intent().apply {
+								action = Intent.ACTION_SEND
+								putExtra(Intent.EXTRA_TEXT, viewModel.movieDetails.homepage)
+								type = "text/plain"
+							}
+							val shareIntent = Intent.createChooser(sendIntent, null)
+							context.startActivity(shareIntent)
+						},
+						modifier = Modifier
+							.align(Alignment.BottomEnd)
+							.padding(10.dp)
+					) {
 						Icon(imageVector = Icons.Default.Share, contentDescription = "Share")
 					}
 			}
@@ -126,7 +139,9 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 
 			Spacer(modifier = Modifier.padding(10.dp))
 			Text("Similar Movies", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
-			Row(modifier = Modifier.padding(5.dp).horizontalScroll(rememberScrollState())) {
+			Row(modifier = Modifier
+				.padding(5.dp)
+				.horizontalScroll(rememberScrollState())) {
 				viewModel.similarMoviesList.forEach {
 					SimilarMovieListing(movie = it) {movieId ->
 						onSimilarMovieClick(movieId)
