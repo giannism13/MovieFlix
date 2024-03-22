@@ -3,8 +3,7 @@ package com.giannism13.movieflix.detailsScreen.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,8 +20,8 @@ import com.giannism13.movieflix.ui.theme.MovieFlixTheme
 
 @Composable
 fun ReviewItem(review: Review) {
-	Surface(color = MaterialTheme.colorScheme.primaryContainer) {
-		Column(modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp)){
+	Card(modifier = Modifier.padding(10.dp)) {
+		Column(modifier = Modifier.fillMaxSize().padding(10.dp)){
 			val firstRow = buildAnnotatedString {
 				withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
 					append(review.author)
