@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
@@ -38,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.giannism13.movieflix.detailsScreen.composables.ReviewItem
 import com.giannism13.movieflix.ui.theme.MovieFlixTheme
 
 const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w1280"
@@ -116,7 +118,13 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 			Text("Cast", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
 			Text(text = viewModel.castList.joinToString { it.name }, overflow = TextOverflow.Visible, textAlign = TextAlign.Start, modifier = Modifier.padding(horizontal = 5.dp))
 
-			//Todo: Reviews
+			Spacer(modifier = Modifier.padding(10.dp))
+			Text("Reviews", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
+
+			viewModel.reviewsList.forEach {
+				ReviewItem(it)
+				HorizontalDivider(modifier = Modifier.padding(vertical = 5.dp))
+			}
 		}
 	}
 }
