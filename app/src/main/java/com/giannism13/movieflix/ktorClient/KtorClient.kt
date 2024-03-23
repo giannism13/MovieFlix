@@ -2,7 +2,6 @@ package com.giannism13.movieflix.ktorClient
 
 import android.util.Log
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -20,7 +19,7 @@ object KtorClient {
 			"zNkYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.HjSFLyc" +
 			"6jX_YYfwuayXrsjJe_Wodyd-JIjlxnLpJX2g"
 
-	val client: HttpClient = HttpClient(OkHttp) {
+	val client: HttpClient = HttpClient {
 		this.expectSuccess = true
 		install(Logging) {
 			logger = object : Logger {
