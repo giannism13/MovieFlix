@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,14 +33,20 @@ import com.giannism13.movieflix.homeScreen.models.MovieListing
 const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w780"
 
 @Composable
-fun MovieListItem(movie: MovieListing, onClick: (Int) -> Unit) {
-	var isFavorite by remember { mutableStateOf(false) } //TODO: Implement favorite movies
+fun MovieListItem(movie: MovieListing, onFavoriteClick:(MovieListing) -> Unit, onClick: (Int) -> Unit) {
+	var isFavorite by remember { mutableStateOf(movie.isFavorite) } //TODO: Implement favorite movies
+	LaunchedEffect(key1 = isFavorite) {
+		onFavoriteClick(movie)
+	}
+
 	Card(modifier = Modifier.clickable{ onClick(movie.id) }) {
 		AsyncImage(
 			IMAGE_BASE_URL + movie.backdropPath,
 			movie.title,
 			contentScale = ContentScale.FillWidth,
-			modifier = Modifier.fillMaxWidth().fillMaxHeight(2 / 3f)
+			modifier = Modifier
+				.fillMaxWidth()
+				.fillMaxHeight(2 / 3f)
 		)
 		Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
 			Text(movie.title, fontSize = 16.sp, fontWeight = FontWeight.Bold)

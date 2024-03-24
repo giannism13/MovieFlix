@@ -1,9 +1,11 @@
 package com.giannism13.movieflix.homeScreen
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.giannism13.movieflix.PreferencesManager
 import com.giannism13.movieflix.homeScreen.models.MovieListing
 import com.giannism13.movieflix.ktorClient.KtorClient
 import com.giannism13.movieflix.ktorClient.responses.PopularMoviesResponse
@@ -14,11 +16,18 @@ import io.ktor.http.appendPathSegments
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel: ViewModel() {
-	private val _movieStateList = mutableStateListOf<MovieListing>()
-	val movieList = _movieStateList
+class HomeViewModel(application: Application): AndroidViewModel(application) {
+	val movieList = mutableStateListOf<MovieListing>()
+	private val appContext = getApplication<Application>().applicationContext
+	var favoriteMoviesIds: Set<String> = emptySet()
 
 	init {
+		viewModelScope.launch(Dispatchers.IO) {
+			PreferencesManager.getFavoriteMoviesIds(appContext).collect { ids ->
+				favoriteMoviesIds = ids
+			}
+			Log.v("Datastore", "favorite movies: $favoriteMoviesIds")
+		}
 		getPopularMoviesPage(1)
 	}
 
@@ -32,7 +41,9 @@ class HomeViewModel: ViewModel() {
 					}
 				}.body()
 				Log.v("HomeViewModel", "movies in page $page: ${response.results.size}")
-				_movieStateList.addAll(response.results)
+				movieList.addAll(response.results.map {
+					it.copy(isFavorite = favoriteMoviesIds.contains(it.id.toString()))
+				})
 			}
 			catch (e: Exception) {
 				e.printStackTrace()
@@ -44,8 +55,18 @@ class HomeViewModel: ViewModel() {
 		}
 	}
 
+	fun toggleFavorite(movie: MovieListing) {
+		viewModelScope.launch(Dispatchers.IO) {
+			movie.setFavorite(movie.isFavorite.not(), appContext)
+			favoriteMoviesIds = if (movie.isFavorite)
+				favoriteMoviesIds.minus(movie.id.toString())
+			else
+				favoriteMoviesIds.plus(movie.id.toString())
+		}
+	}
+
 	fun refreshPopularMovies(stopRefresh:() -> Unit) {
-		_movieStateList.clear()
+		movieList.clear()
 		getPopularMoviesPage(1, stopRefresh)
 	}
 }

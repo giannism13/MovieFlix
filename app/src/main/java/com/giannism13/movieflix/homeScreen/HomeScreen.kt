@@ -40,7 +40,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), onMovieClick:(Int) -> Uni
 				coroutineScope.launch {
 					listState.animateScrollToItem(0)
 				}
-			}){ Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "scroll to top")}
+			}) { Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "scroll to top")}
 		}
 	) { paddingValues ->
 
@@ -79,7 +79,12 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), onMovieClick:(Int) -> Uni
 				contentPadding = PaddingValues(10.dp)
 			) {
 				items(viewModel.movieList) {
-					MovieListItem(it, onMovieClick)
+					MovieListItem(it,
+						onFavoriteClick = {movieListing ->
+							viewModel.toggleFavorite(movieListing)
+						},
+						onMovieClick
+					)
 				}
 			}
 			PullToRefreshContainer(state = pullRefreshState)
