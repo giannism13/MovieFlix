@@ -3,7 +3,7 @@ package com.giannism13.movieflix.homeScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -73,7 +73,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), onMovieClick:(Int) -> Uni
 		) {
 			LazyColumn(
 				state = listState,
-				modifier = Modifier.consumeWindowInsets(paddingValues),
+				modifier = Modifier.padding(paddingValues),
 				horizontalAlignment = Alignment.CenterHorizontally,
 				verticalArrangement = Arrangement.spacedBy(10.dp),
 				contentPadding = PaddingValues(10.dp)
