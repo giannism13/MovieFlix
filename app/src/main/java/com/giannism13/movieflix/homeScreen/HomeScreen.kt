@@ -80,10 +80,13 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), onMovieClick:(Int) -> Uni
 			) {
 				items(viewModel.movieList) {
 					MovieListItem(it,
-						onFavoriteClick = {movieListing ->
-							viewModel.toggleFavorite(movieListing)
+						onFavoriteClick = {movieId ->
+							viewModel.toggleFavorite(movieId)
 						},
-						onMovieClick
+						favoriteMovieIds = viewModel.favoriteMovieIds,
+						onClick = {movieId->
+							onMovieClick(movieId)
+						}
 					)
 				}
 			}

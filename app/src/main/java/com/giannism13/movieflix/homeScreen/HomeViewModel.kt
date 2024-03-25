@@ -2,7 +2,10 @@ package com.giannism13.movieflix.homeScreen
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.giannism13.movieflix.PreferencesManager
@@ -19,14 +22,14 @@ import kotlinx.coroutines.launch
 class HomeViewModel(application: Application): AndroidViewModel(application) {
 	val movieList = mutableStateListOf<MovieListing>()
 	private val appContext = getApplication<Application>().applicationContext
-	var favoriteMoviesIds: Set<String> = emptySet()
+	var favoriteMovieIds by mutableStateOf(setOf<String>())
 
 	init {
 		viewModelScope.launch(Dispatchers.IO) {
-			PreferencesManager.getFavoriteMoviesIds(appContext).collect { ids ->
-				favoriteMoviesIds = ids
+			PreferencesManager.getFavoriteMovieIds(appContext).collect { ids ->
+				favoriteMovieIds = ids
 			}
-			Log.v("Datastore", "favorite movies: $favoriteMoviesIds")
+			Log.v("Datastore", "favorite movies: $favoriteMovieIds")
 		}
 		getPopularMoviesPage(1)
 	}
@@ -41,9 +44,7 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 					}
 				}.body()
 				Log.v("HomeViewModel", "movies in page $page: ${response.results.size}")
-				movieList.addAll(response.results.map {
-					it.copy(isFavorite = favoriteMoviesIds.contains(it.id.toString()))
-				})
+				movieList.addAll(response.results)
 			}
 			catch (e: Exception) {
 				e.printStackTrace()
@@ -55,13 +56,13 @@ class HomeViewModel(application: Application): AndroidViewModel(application) {
 		}
 	}
 
-	fun toggleFavorite(movie: MovieListing) {
+	fun toggleFavorite(movieId: Int) {
+		favoriteMovieIds = if (favoriteMovieIds.contains(movieId.toString()))
+			favoriteMovieIds.minus(movieId.toString())
+		else
+			favoriteMovieIds.plus(movieId.toString())
 		viewModelScope.launch(Dispatchers.IO) {
-			movie.setFavorite(movie.isFavorite.not(), appContext)
-			favoriteMoviesIds = if (movie.isFavorite)
-				favoriteMoviesIds.minus(movie.id.toString())
-			else
-				favoriteMoviesIds.plus(movie.id.toString())
+			PreferencesManager.saveFavoriteMovieIds(favoriteMovieIds, appContext)
 		}
 	}
 
