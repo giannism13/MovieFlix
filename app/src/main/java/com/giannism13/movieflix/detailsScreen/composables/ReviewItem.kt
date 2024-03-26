@@ -27,7 +27,7 @@ fun ReviewItem(review: Review) {
 					append(review.author)
 				}
 				withStyle(SpanStyle(fontWeight = FontWeight.ExtraLight)) {
-					append(" - ${review.createdAt}")
+					append(" - ${review.createdAt.subSequence(0, 10)}")
 				}
 			}
 			Text(firstRow, modifier = Modifier.padding(bottom = 10.dp))
