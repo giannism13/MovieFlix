@@ -136,7 +136,8 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 			Text(text = viewModel.castList.joinToString { it.name }, overflow = TextOverflow.Visible, textAlign = TextAlign.Start, modifier = Modifier.padding(horizontal = 5.dp))
 
 			Spacer(modifier = Modifier.padding(10.dp))
-			Text("Reviews", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
+			if (viewModel.reviewsList.isNotEmpty())
+				Text("Reviews", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
 
 			viewModel.reviewsList.forEach {
 				ReviewItem(it)
