@@ -26,10 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,7 +48,6 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 		viewModel.getCompleteMovieDetails(movieId)
 	}
 	val context = LocalContext.current
-	var isFavorite by remember { mutableStateOf(false) } //TODO: Implement favorite movies
 
 	Scaffold(
 		topBar = {
@@ -108,11 +103,21 @@ fun MovieDetailsScreen(movieId: Int, viewModel: MovieDetailsViewModel = viewMode
 			Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
 				Text(text = viewModel.movieDetails.releaseDate)
 				Spacer(modifier = Modifier.weight(1f))
-				IconToggleButton(checked = isFavorite, onCheckedChange = {isFavorite = it}) {
-					if(isFavorite)
-						Icon(imageVector = Icons.Filled.Favorite, contentDescription ="Favorite", tint = Color.Red)
+				IconToggleButton(
+					checked = viewModel.favoriteMovieIds.contains(movieId.toString()),
+					onCheckedChange = { viewModel.toggleFavorite(movieId) }) {
+					if (viewModel.favoriteMovieIds.contains(movieId.toString()))
+						Icon(
+							imageVector = Icons.Filled.Favorite,
+							contentDescription = "Favorite",
+							tint = Color.Red
+						)
 					else
-						Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription ="Favorite", tint = Color.Red)
+						Icon(
+							imageVector = Icons.Outlined.FavoriteBorder,
+							contentDescription = "Favorite",
+							tint = Color.Red
+						)
 				}
 			}
 
